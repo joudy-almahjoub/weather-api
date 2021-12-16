@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="wrapper">
+        <h4>.</h4>
+        <section class="display">
+            <div class="container">
+                <div class="icon"></div>
+                <h2 id="cityout"></h2>
+                <p id="descreption"></p>
+                <p id="temp"></p>
+                <p id="wind"></p>
+            </div>
+        </section>
+        <section class="inputs">
+            <input type="text" placeholder="type any city name..." id="cityinput"> <br> <br>
+            <input type="submit" value="submit" id="btn">
+        </section>
+    </div>
+    <script>
+       let btn = document.querySelector('#btn')
+       let inputval = document.querySelector('#cityinput')
+       let des = document.querySelector('#descreption')
+       let temp = document.querySelector('#temp')
+       let wind = document.querySelector('#wind')
+       let cityname = document.querySelector('#cityout')
+       let icon = document.querySelector('.icon')
+       let apik= "8d18113efb0e2363a8647c32affe8e67"
+       function convertion(val){
+    return (val - 273).toFixed(2)
+}
+       btn.addEventListener('click' , function(){
+
+        fetch('https://api.openweathermap.org/data/2.5/weather?q='+inputval.value+'&appid='+apik)
+           .then(res => res.json())
+        //    .then(data => console.log(data))
+           .then(data => {
+            console.log(data);
+            let nameval =  data.name;
+            let descrip =  data.weather[0].description;
+            let tempature = data.main.temp;
+            let wndspd = data.wind.speed;
+            let icon1= data.weather[0].icon;
+
+            cityname.innerText=`City: ${nameval}`
+            temp.innerText = `Temperature: ${ convertion(tempature)} C`
+            des.innerText = `Conditions: ${descrip}`
+            wind.innerText = `Wind Speed: ${wndspd} km/h`
+            icon.innerHTML=  `<img src="http://openweathermap.org/img/wn/${icon1}@2x.png" style= 'height:10rem'/>`;
+
+
+        })
+        .catch(err => alert('You entered Wrong city name'))
+    })
+   </script>
+
+</body>
+</html>
